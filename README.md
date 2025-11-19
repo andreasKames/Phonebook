@@ -1,4 +1,3 @@
-https://phonebook-6bmw.onrender.com/info
-https://phonebook-6bmw.onrender.com/api/persons
+https://phonebook-9ith.onrender.com/
 
 http://localhost:3001
