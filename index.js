@@ -119,5 +119,6 @@ app.post('/api/persons', (request, response) => {
 })
 
 const PORT = process.env.PORT || 3001
+console.log(`Try to open Port ${PORT}`)
 app.listen(PORT)
 console.log(`Server running on Port ${PORT}.`)
