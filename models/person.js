@@ -28,4 +28,4 @@ contactSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('Contact', contactSchema)
+module.exports = mongoose.model('Person', contactSchema)

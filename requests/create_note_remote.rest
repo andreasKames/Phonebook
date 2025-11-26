@@ -1,0 +1,7 @@
+POST https://phonebook-9ith.onrender.com//api/persons
+Content-Type: application/json
+
+{
+    "name": "Peter Postnan",
+    "number": "01234 5678901"
+}

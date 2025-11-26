@@ -1,10 +1,12 @@
 require('dotenv').config()
+const Person = require('./models/person') 
 const express = require('express')
 const app = express()
 app.use(express.json())
 app.use(express.static('dist'))
 var morgan = require('morgan')
 
+morgan('tiny')
 
 const generateRandomId = () => {
   const maxId = 10000
@@ -24,6 +26,32 @@ const options = {
   timeZoneName: 'short' // Optional: Fügt den Zeitzonennamen hinzu (z.B. EST/EDT)
 };
 
+/*
+let persons =
+[
+    { 
+      "id": "1",
+      "name": "Arto Hellas", 
+      "number": "040-123456"
+    },
+    { 
+      "id": "2",
+      "name": "Ada Lovelace", 
+      "number": "39-44-5323523"
+    },
+    { 
+      "id": "3",
+      "name": "Dan Abramov", 
+      "number": "12-43-234345"
+    },
+    { 
+      "id": "4",
+      "name": "Mary Poppendieck", 
+      "number": "39-23-6423122"
+    } 
+]
+/*
+
 const maxId = () => {
   const maxId = persons.length > 0
     ? Math.max(...persons.map(n => Number(n.id)))
@@ -35,7 +63,11 @@ const maxId = () => {
 let info =
 `Phonebook has info for ${maxId()} people.\n${now.toLocaleString('de-De', options)}`
 
-morgan('tiny')
+app.get('/info', (request, response) => {
+  response.end(info)
+});
+*/
+
 
 /*
 const app = http.createServer((request, response) => {
@@ -44,12 +76,18 @@ const app = http.createServer((request, response) => {
 });
 */
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })  
 });
+/*
+app.get('/api/notes', (request, response) => {
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
+})
+*/
 
-app.get('/info', (request, response) => {
-  response.end(info)
-});
 
 
 app.get('/api/persons/:id', (request, response) => {
@@ -69,30 +107,59 @@ app.delete('/api/persons/:id', (request, response) => {
 
   response.status(204).end()
 })
+/**
+ *app.post('/api/notes', (request, response) => {
+  const body = request.body
+
+  if (!body.content) {
+    return response.status(400).json({ error: 'content missing' })
+  }
+
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+  })
+
+  note.save().then(savedNote => {
+    response.json(savedNote)
+  })
+})
+ 
+ * 
+ * 
+*/
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
   
   if (!body.name || !body.number) {
-    return response.status(400).json({ 
+    return response.status(400).json({  
       error: 'name or number missing' 
     })
   }
-  const filteredPerson = persons.find(person =>person.name === body.name)
- 
-  if (filteredPerson !== undefined){
+  Person.find({}).then(persons => {
+    const filteredPerson = persons.find(person =>person.name === body.name)
+     if (filteredPerson !== undefined){
         return response.status(400).json({
             error: 'Name is already in the phonebook'
     })
    }
+  })  
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateRandomId(),
-  }
+  })
+  
+  person.save().then(savedPerson =>
+    response.json(savedPerson)
+  )
+  
+  /*
   persons = persons.concat(person)
   response.json(person)
+  */
 })
 
 const PORT = process.env.PORT || 3001
