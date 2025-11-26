@@ -80,15 +80,6 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
   })  
 });
-/*
-app.get('/api/notes', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
-})
-*/
-
-
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
@@ -151,7 +142,7 @@ app.post('/api/persons', (request, response) => {
     number: body.number,
     id: generateRandomId(),
   })
-  
+
   person.save().then(savedPerson =>
     response.json(savedPerson)
   )
