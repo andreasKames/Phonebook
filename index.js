@@ -99,21 +99,40 @@ app.delete('/api/persons/:id', (request, response, next) => {
     }) 
     .catch (error =>next(error))
 })
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  Person.findById(request.params.id)
+    .then(person => {
+      if (!person) {
+        return response.status(404).end()
+      }
+      
+      person.name = name
+      person.number = number
+
+      return person.save().then((updatedperson) => {
+        response.json(updatedperson)
+      })
+    })
+    .catch(error => next(error))
+})
 /**
- *app.post('/api/notes', (request, response) => {
+ *app.post('/api/persons', (request, response) => {
   const body = request.body
 
   if (!body.content) {
     return response.status(400).json({ error: 'content missing' })
   }
 
-  const note = new Note({
+  const person = new person({
     content: body.content,
     important: body.important || false,
   })
 
-  note.save().then(savedNote => {
-    response.json(savedNote)
+  person.save().then(savedperson => {
+    response.json(savedperson)
   })
 })
  
